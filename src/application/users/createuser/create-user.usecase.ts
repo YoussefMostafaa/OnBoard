@@ -5,8 +5,8 @@ import { CreateUserRequest } from "./create-user.request";
 
 export class CreateUserUseCase implements UseCase<CreateUserRequest, User> { // Use typeof CreateUserRequest
     database: UserRepository;
-    constructor() {
-        this.database = new UserRepository();
+    constructor(database: UserRepository) {
+        this.database = database;
     }
 
     async execute(body: CreateUserRequest): Promise<User> {

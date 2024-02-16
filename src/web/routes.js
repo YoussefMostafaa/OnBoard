@@ -1,40 +1,39 @@
-const express = require('express');
-const cookieParser = require('cookie-parser'); 
-const { createuserusecase } = require('../application/createuserusecase');
-const { getusersusecase } = require('../application/getusersusecase');
-const { loginusecase } = require('../application/loginusecase');
-const { logoutusecase } = require('../application/logoutusecase');
-const { deleteaccountusecase } = require('../application/deleteaccountusecase');
+import express from 'express';
+import  {CreateUserUseCase}  from '../application/users/createuser/create-user.usecase.ts';
+import  {DeleteUserUseCase}  from '../application/users/deleteuser/delete-user.usecase.ts';
+import  {LoginUserUseCase}  from '../application/users/loginuser/login-user.usecase.ts';
+ import {LogoutUserUseCase} from '../application/users/logoutuser/logout-user.usecase.ts';
+import cookieParser from 'cookie-parser';
+import { UserRepository } from '../data/UserRepository.ts';
 const router = express.Router();
 router.use(cookieParser()); 
 
 router.post('/createuser', (req, res) => {
-    const { username, password } = req.body;
-    const user = createuserusecase(username, password);
+    const usecase = new CreateUserUseCase(UserRepository);
+    const user = usecase.execute(req.body);
     res.json(user);
 });
 
-router.get('/users', (req, res) => {
-    const users = getusersusecase();
-    res.json(users);
+router.delete('/deleteuser', (req, res) => {
+    const usecase = new DeleteUserUseCase(UserRepository);
+    const user = usecase.execute(req.body);
+    res.json(user);
 });
 
 router.post('/login', (req, res) => {
-    const { username, password } = req.body;
-    loginusecase(username, password,res);
+    const usecase = new LoginUserUseCase(UserRepository);
+    const user = usecase.execute(req.body);
+    res.json(user);
 });
 
 router.post('/logout', (req, res) => {
-    logoutusecase(req,res);
+    const usecase = new LogoutUserUseCase(UserRepository);
+    const user = usecase.execute(req.body);
+    res.json(user);
 });
 
-router.delete('/deleteaccount', (req, res) => {
-    deleteaccountusecase(req,res);
-});
-
-// router.get('/', (req, res) => {
-//     res.sendFile('home.html', { root: __dirname + '/' })
-// });
 
 
-module.exports = router;
+
+
+export default router;
